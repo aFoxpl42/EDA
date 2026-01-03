@@ -6,6 +6,6 @@ from report_builder import analyze_csv
 from html_writer import write_html
 
 filepath = sys.argv[1]
-rows, cols, prewiev_table_html = analyze_csv(filepath)
+rows, cols, prewiev_table_html, missing_values_html = analyze_csv(filepath)
 
-write_html(filepath, rows, cols, prewiev_table_html)
+write_html(filepath, rows, cols, prewiev_table_html, missing_values_html)
