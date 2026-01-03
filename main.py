@@ -1,11 +1,36 @@
-# Imports
 import sys
 import os
 
 from report_builder import analyze_csv
 from html_writer import write_html
 
-filepath = sys.argv[1]
-rows, cols, prewiev_table_html, missing_values_html = analyze_csv(filepath)
+def main() -> int:
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <path_to_csv>")
+        return 1
 
-write_html(filepath, rows, cols, prewiev_table_html, missing_values_html)
+    filepath = sys.argv[1]
+
+    if not os.path.exists(filepath):
+        print(f"File '{filepath}' does not exist.")
+        return 1
+
+    rows, cols, preview_df, missing_df, total_missing_cells, overall_missing_pct = analyze_csv(filepath)
+
+    output_file = "output/report.html"
+    write_html(
+        filepath=filepath,
+        rows=rows,
+        cols=cols,
+        preview_df=preview_df,
+        missing_df=missing_df,
+        total_missing_cells=total_missing_cells,
+        overall_missing_pct=overall_missing_pct,
+        output_file=output_file,
+    )
+
+    print(f"Report generated: {output_file}")
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())

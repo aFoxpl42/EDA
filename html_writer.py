@@ -1,16 +1,46 @@
+# html_writer.py
 import os
-import pandas as pd
 
-def write_html(filepath:str, rows:int, cols:int, preview_table, missing_values ,output_file="output/report.html"):
-    with open(output_file, 'w') as f:
+def write_html(
+    filepath: str,
+    rows: int,
+    cols: int,
+    preview_df,
+    missing_df,
+    total_missing_cells: int,
+    overall_missing_pct: float,
+    output_file="output/report.html",
+):
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+    # Decide what to show in the Missing Values section
+    if total_missing_cells == 0:
+        missing_section_html = """
+        <p><strong>No missing values detected.</strong></p>
+        """
+    else:
+        missing_section_html = (
+            missing_df
+            .sort_values("missing_count", ascending=False)
+            .to_html(index=False)
+        )
+
+    with open(output_file, "w", encoding="utf-8") as f:
         f.write(f"""
-    <html><body>
-    <h1>EDA Report</h1>
-    <p>{os.path.basename(filepath)}</p>
-    <p>Rows: {rows}</p>
-    <p>Cols: {cols}</p>
-    <p>Preview of table: </p>
-    {preview_table.to_html()}
-    <p>Missing values overview: </p>
-    {missing_values.to_frame().to_html()}
-    </body></html>""")
+<html><body>
+<h1>EDA Report | {os.path.basename(filepath)}</h1>
+
+<p>Rows: {rows}</p>
+<p>Columns: {cols}</p>
+
+<h2>Preview</h2>
+{preview_df.to_html(index=False)}
+
+<h2>Missing Values</h2>
+<p>Total missing cells: {total_missing_cells}</p>
+<p>Overall missing %: {overall_missing_pct:.2f}%</p>
+
+{missing_section_html}
+
+</body></html>
+""")

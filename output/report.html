@@ -1,83 +1,143 @@
 
-    <html><body>
-    <h1>EDA Report</h1>
-    <p>v</p>
-    <p>Rows: 5</p>
-    <p>Cols: 4</p>
-    <p>Preview of table: </p>
-    <table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Username</th>
-      <th>Identifier</th>
-      <th>First name</th>
-      <th>Last name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>booker12</td>
-      <td>9012</td>
-      <td>Rachel</td>
-      <td>Booker</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>grey07</td>
-      <td>2070</td>
-      <td>Laura</td>
-      <td>Grey</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>johnson81</td>
-      <td>4081</td>
-      <td>Craig</td>
-      <td>Johnson</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>jenkins46</td>
-      <td>9346</td>
-      <td>Mary</td>
-      <td>Jenkins</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>smith79</td>
-      <td>5079</td>
-      <td>Jamie</td>
-      <td>Smith</td>
-    </tr>
-  </tbody>
-</table>
-    <p>Missing values overview: </p>
+<html><body>
+<h1>EDA Report | diabetes.csv</h1>
+
+<p>Rows: 768</p>
+<p>Columns: 9</p>
+
+<h2>Preview</h2>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
+      <th>Pregnant</th>
+      <th>Glucose</th>
+      <th>Diastolic_BP</th>
+      <th>Skin_Fold</th>
+      <th>Serum_Insulin</th>
+      <th>BMI</th>
+      <th>Diabetes_Pedigree</th>
+      <th>Age</th>
+      <th>Class</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>Username</th>
+      <td>6</td>
+      <td>148.0</td>
+      <td>72.0</td>
+      <td>35.0</td>
+      <td>NaN</td>
+      <td>33.6</td>
+      <td>0.627</td>
+      <td>50</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>85.0</td>
+      <td>66.0</td>
+      <td>29.0</td>
+      <td>NaN</td>
+      <td>26.6</td>
+      <td>0.351</td>
+      <td>31</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>Identifier</th>
+      <td>8</td>
+      <td>183.0</td>
+      <td>64.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>23.3</td>
+      <td>0.672</td>
+      <td>32</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>89.0</td>
+      <td>66.0</td>
+      <td>23.0</td>
+      <td>94.0</td>
+      <td>28.1</td>
+      <td>0.167</td>
+      <td>21</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>First name</th>
       <td>0</td>
-    </tr>
-    <tr>
-      <th>Last name</th>
-      <td>0</td>
+      <td>137.0</td>
+      <td>40.0</td>
+      <td>35.0</td>
+      <td>168.0</td>
+      <td>43.1</td>
+      <td>2.288</td>
+      <td>33</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>
-    </body></html>
+
+<h2>Missing Values</h2>
+<p>Total missing cells: 652</p>
+<p>Overall missing %: 9.43%</p>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>column</th>
+      <th>missing_count</th>
+      <th>missing_pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Serum_Insulin</td>
+      <td>374</td>
+      <td>48.697917</td>
+    </tr>
+    <tr>
+      <td>Skin_Fold</td>
+      <td>227</td>
+      <td>29.557292</td>
+    </tr>
+    <tr>
+      <td>Diastolic_BP</td>
+      <td>35</td>
+      <td>4.557292</td>
+    </tr>
+    <tr>
+      <td>BMI</td>
+      <td>11</td>
+      <td>1.432292</td>
+    </tr>
+    <tr>
+      <td>Glucose</td>
+      <td>5</td>
+      <td>0.651042</td>
+    </tr>
+    <tr>
+      <td>Pregnant</td>
+      <td>0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <td>Diabetes_Pedigree</td>
+      <td>0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <td>Age</td>
+      <td>0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <td>Class</td>
+      <td>0</td>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+
+</body></html>
