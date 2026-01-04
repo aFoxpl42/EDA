@@ -41,10 +41,22 @@ def analyze_csv(filepath: str, delimiter: str):
     if columns_with_missing > 0:
         warnings.append(f"{columns_with_missing} columns have missing values.")
         worst_column = missing_df.sort_values("missing_count", ascending=False).index[0]
-        warnings.append(f"Worst column(highest missing %) is: {worst_column} with {missing_df.sort_values("missing_count", ascending=False)["missing_count"][0]}% ❗")
+        warnings.append(f"Worst column(highest missing %) is: {worst_column} with {missing_df.sort_values("missing_count", ascending=False)["missing_count"].iloc[0]}% ❗")
     else: 
         warnings.append("No missing values detected in any columns ✅")
 
+    const_columns = list(df.columns[df.nunique() <=1].values)
+    
+    if len(const_columns) > 0 & len(const_columns) < 10:
+        warnings.append(f"Constant columns: {const_columns} ❗")
+    elif len(const_columns) >= 10:
+        const_columns_fist_10 = const_columns[:10]
+        const_columns_fist_10.append("and more....")
+        warnings.append(f"Constant columns: {const_columns} ❗")
+    else:
+        warnings.append(f"No constant columns detected.")
+    
+    
     return (
         rows,
         cols,
