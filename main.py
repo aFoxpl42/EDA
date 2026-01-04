@@ -5,19 +5,23 @@ from report_builder import analyze_csv
 from html_writer import write_html
 
 def main() -> int:
-    if len(sys.argv) != 4:
-        print("Usage: python main.py <path_to_csv> <path_to_output> <delimiter>")
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <path_to_csv> <path_to_output(default='output/report.html')> <delimiter(default=',')>")
         return 1
 
     filepath = sys.argv[1]
-    output_path = sys.argv[2]
-    delimiter = sys.argv[3]
+    output_path = sys.argv[2] if sys.argv[2] else "output/report.html"
+    delimiter = sys.argv[3] if sys.argv[3] else ','
 
     if not os.path.exists(filepath):
         print(f"File '{filepath}' does not exist.")
         return 1
 
-    rows, cols, preview_df, missing_df, total_missing_cells, overall_missing_pct = analyze_csv(filepath, delimiter)
+    try:
+        rows, cols, preview_df, missing_df, total_missing_cells, overall_missing_pct = analyze_csv(filepath, delimiter)
+    except FileNotFoundError as e:
+        print(e)
+        return 1
 
     write_html(
         filepath=filepath,
