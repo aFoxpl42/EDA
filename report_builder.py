@@ -16,7 +16,7 @@ def analyze_csv(filepath: str, delimiter: str):
           .rename("missing_count")
           .to_frame()
     )
-    missing_df["missing_pct"] = (missing_df["missing_count"] / rows) * 100
+    missing_df["missing_pct"] = (missing_df["missing_count"] / rows) * 100 if rows > 0 else 0
 
     # Overall missing stats
     total_missing_cells = int(missing_df["missing_count"].sum())
@@ -39,8 +39,9 @@ def analyze_csv(filepath: str, delimiter: str):
     
     if columns_with_missing > 0:
         warnings.append(f"{columns_with_missing} columns have missing values.")
-        worst_column = missing_df.sort_values("missing_pct", ascending=False).index[0]
-        warnings.append(f"Worst column(highest missing %) is: {worst_column} with {missing_df.sort_values('missing_pct', ascending=False)['missing_pct'].iloc[0]}% ❗")
+        sorted_by_missing_pct = missing_df.sort_values("missing_pct", ascending=False)
+        worst_column = sorted_by_missing_pct.index[0]
+        warnings.append(f"Worst column(highest missing %) is: {worst_column} with {sorted_by_missing_pct['missing_pct'].iloc[0]}% ❗")
     else: 
         warnings.append("No missing values detected in any columns ✅")
 
@@ -49,12 +50,30 @@ def analyze_csv(filepath: str, delimiter: str):
     if len(const_columns) > 0 and len(const_columns) < 10:
         warnings.append(f"Constant columns: {const_columns} ❗")
     elif len(const_columns) >= 10:
-        const_columns_fist_10 = const_columns[:10]
-        const_columns_fist_10.append("and more....")
-        warnings.append(f"Constant columns: {const_columns} ❗")
+        const_columns_first_10 = const_columns[:10]
+        const_columns_first_10.append("and more....")
+        warnings.append(f"Constant columns: {const_columns_first_10} ❗")
     else:
         warnings.append(f"No constant columns detected.")
     
+    likely_id = []
+    if rows > 20:
+        df_obj = df.select_dtypes(include=object)
+        for k,v in df_obj.count().items() :
+            if v == 0:
+                continue
+            unique_ratio = df_obj.nunique(0, dropna=True).loc[str(k)] / v
+            if unique_ratio >= 0.8 and df_obj.nunique(0, dropna=True).loc[str(k)] >= 20:
+                likely_id.append(str(k))
+        if len(likely_id) >= 10:
+            likely_id_first_10 = likely_id[:10]
+            likely_id_first_10.append("and more...")
+            for i in likely_id_first_10:
+                warnings.append(i)
+        elif len(likely_id) < 10 and len(likely_id) > 0:
+            for i in likely_id:
+                warnings.append(i)
+        
     
     return (
         rows,
