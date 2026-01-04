@@ -1,12 +1,12 @@
 import os
 import pandas as pd
 
-def analyze_csv(filepath: str):
+def analyze_csv(filepath: str, delimiter: str):
     if not os.path.exists(filepath):
         print(f"File: {filepath} doesn't exist!")
         os._exit(1)
 
-    df = pd.read_csv(filepath, delimiter=',')
+    df = pd.read_csv(filepath, delimiter=delimiter)
 
     rows, cols = df.shape
 
