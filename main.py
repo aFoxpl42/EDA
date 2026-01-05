@@ -3,6 +3,7 @@ import os
 
 from report_builder import analyze_csv
 from html_writer import write_html
+from plots import miss_bar_chart
 
 def main() -> int:
     if len(sys.argv) < 2:
@@ -22,7 +23,9 @@ def main() -> int:
     except FileNotFoundError as e:
         print(e)
         return 1
-
+    
+    missingness_chart_file_location = miss_bar_chart(missing_df)
+    
     write_html(
         filepath=filepath,
         rows=rows,
