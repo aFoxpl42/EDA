@@ -34,7 +34,7 @@ def analyze_csv(filepath: str, delimiter: str):
     duplicated_rows_pct = (duplicated_rows / rows) * 100 if rows > 0 else 0.0
 
     if duplicated_rows > 0:
-        warnings.append(f"Duplicated rows detected: {duplicated_rows} ({duplicated_rows_pct}%) ❗")
+        warnings.append(f"Duplicated rows detected: {duplicated_rows} ({duplicated_rows_pct:.2f}%) ❗")
     else:
         warnings.append("No duplicate rows detected ✅")
     
@@ -42,7 +42,7 @@ def analyze_csv(filepath: str, delimiter: str):
         warnings.append(f"{columns_with_missing} columns have missing values.")
         sorted_by_missing_pct = missing_df.sort_values("missing_pct", ascending=False)
         worst_column = sorted_by_missing_pct.index[0]
-        warnings.append(f"Worst column(highest missing %) is: {worst_column} with {sorted_by_missing_pct['missing_pct'].iloc[0]}% ❗")
+        warnings.append(f"Worst column(highest missing %) is: {worst_column} with {sorted_by_missing_pct['missing_pct'].iloc[0]:.2f}% ❗")
     else: 
         warnings.append("No missing values detected in any columns ✅")
 
@@ -65,7 +65,6 @@ def analyze_csv(filepath: str, delimiter: str):
     # uniqueness ration per column
     unique_ratio = unique_count_per_col / non_null_count_per_col
     
-    print(df_obj["Stock"].values[:200])
 
     likely_id = (
         unique_ratio[
@@ -93,6 +92,20 @@ def analyze_csv(filepath: str, delimiter: str):
             else:
                 id_like_columns.append(i)
     
+    if len(email_like_columns) >= 10:
+        email_like_columns_first_10 = email_like_columns[:10]
+        email_like_columns_first_10.append("and more...")
+        warnings.append("High-cardinality email-like columns: " + ", ".join(email_like_columns_first_10) + f" (total: {len(email_like_columns)})")
+    elif len(email_like_columns) > 0 and len(email_like_columns) < 10:
+        warnings.append("High-cardinality email-like columns: " + ", ".join(email_like_columns) + f" (total: {len(email_like_columns)})")
+    
+    if len(id_like_columns) >= 10:
+        id_like_columns_first_10 = id_like_columns[:10]
+        id_like_columns_first_10.append("and more...")
+        warnings.append("High-cardinality ID-like columns: " + ", ".join(id_like_columns_first_10) + f" (total: {len(id_like_columns)})")
+    elif len(id_like_columns) > 0 and len(id_like_columns) < 10:
+        warnings.append("High-cardinality ID-like columns: " + ", ".join(id_like_columns) + f" (total: {len(id_like_columns)})")
+    
     return (
         rows,
         cols,
@@ -100,4 +113,5 @@ def analyze_csv(filepath: str, delimiter: str):
         missing_df.reset_index().rename(columns={"index": "column"}),
         total_missing_cells,
         overall_missing_pct,
+        warnings
     )

@@ -18,7 +18,7 @@ def main() -> int:
         return 1
 
     try:
-        rows, cols, preview_df, missing_df, total_missing_cells, overall_missing_pct = analyze_csv(filepath, delimiter)
+        rows, cols, preview_df, missing_df, total_missing_cells, overall_missing_pct, warnings = analyze_csv(filepath, delimiter)
     except FileNotFoundError as e:
         print(e)
         return 1
@@ -31,6 +31,7 @@ def main() -> int:
         missing_df=missing_df,
         total_missing_cells=total_missing_cells,
         overall_missing_pct=overall_missing_pct,
+        warnings=warnings,
         output_file=output_path,
     )
 
