@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import validators
 
 def analyze_csv(filepath: str, delimiter: str):
     if not os.path.exists(filepath):
@@ -57,23 +58,40 @@ def analyze_csv(filepath: str, delimiter: str):
         warnings.append(f"No constant columns detected.")
     
     likely_id = []
-    if rows > 20:
-        df_obj = df.select_dtypes(include=object)
-        for k,v in df_obj.count().items() :
-            if v == 0:
-                continue
-            unique_ratio = df_obj.nunique(0, dropna=True).loc[str(k)] / v
-            if unique_ratio >= 0.8 and df_obj.nunique(0, dropna=True).loc[str(k)] >= 20:
-                likely_id.append(str(k))
-        if len(likely_id) >= 10:
-            likely_id_first_10 = likely_id[:10]
-            likely_id_first_10.append("and more...")
-            for i in likely_id_first_10:
-                warnings.append(i)
-        elif len(likely_id) < 10 and len(likely_id) > 0:
-            for i in likely_id:
-                warnings.append(i)
-        
+    df_obj = df.select_dtypes(include=object)
+    # per column metrics
+    non_null_count_per_col = df_obj.count()
+    unique_count_per_col = df_obj.nunique(0, dropna=True)
+    # uniqueness ration per column
+    unique_ratio = unique_count_per_col / non_null_count_per_col
+    
+    print(df_obj["Stock"].values[:200])
+
+    likely_id = (
+        unique_ratio[
+            (unique_ratio >= 0.8) & # high uniquenesss
+            (unique_count_per_col >= 20) & # enough data
+            (non_null_count_per_col >= 20) # avoid tiny columns
+        ]
+        .index
+        .to_list()
+    )        
+    
+    email_like_columns = []
+    id_like_columns = []
+    
+    for i in likely_id:
+        email_like = 0
+        sample = df_obj[i].dropna().astype(str).head(200)
+        for j in sample:
+            if validators.email(j.lower().strip()):
+                email_like += 1
+        if len(sample) > 0:
+            email_like_score = email_like/len(sample)
+            if email_like_score >= 0.6:
+                email_like_columns.append(i)
+            else:
+                id_like_columns.append(i)
     
     return (
         rows,
