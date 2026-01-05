@@ -1,12 +1,194 @@
 
-<html><body>
-<h1>EDA Report | synth.csv</h1>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card: #f9fafb;
+    --accent: #2563eb;
+    --warn: #b45309;
+  }
 
-<p>Rows: 4362</p>
-<p>Columns: 5</p>
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    line-height: 1.5;
+  }
 
-<h2>Preview</h2>
-<table border="1" class="dataframe">
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 18px 48px;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    margin: 0 0 6px 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 14px 0 18px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .card .label {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .card .value {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  h2 {
+    margin-top: 26px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .note {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: -4px;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+  }
+
+  li {
+    margin: 6px 0;
+  }
+
+  .warnings {
+    border-left: 4px solid var(--warn);
+    padding-left: 12px;
+    background: #fffbeb;
+    border-radius: 10px;
+    border: 1px solid #f3e8c8;
+    padding: 12px 14px;
+  }
+
+  table.dataframe {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 13px;
+  }
+
+  table.dataframe thead th {
+    background: #f3f4f6;
+    text-align: left;
+    font-weight: 700;
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table.dataframe tbody td, table.dataframe tbody th {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  table.dataframe tbody tr:nth-child(even) {
+    background: #fcfcfd;
+  }
+
+  code {
+    background: #f3f4f6;
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+
+  .section {
+    margin-top: 18px;
+  }
+
+  .small {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>EDA Report | synth.csv</h1>
+      <p class="subtitle">Generated from <code>synth.csv</code></p>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <div class="label">Rows</div>
+        <div class="value">4362</div>
+      </div>
+      <div class="card">
+        <div class="label">Columns</div>
+        <div class="value">5</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Warnings</h2>
+      <div class="warnings">
+        <ul>
+          <li>Duplicated rows detected: 15 (0.34%) </li>
+<li>5 columns have missing values.</li>
+<li>Worst column(highest missing %) is: Category with 63.00% </li>
+<li>No constant columns detected.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Preview</h2>
+      <p class="note">First rows of the dataset</p>
+      <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th>Category</th>
@@ -54,21 +236,13 @@
     </tr>
   </tbody>
 </table>
+    </div>
 
-<h2>Warnings</h2>
-<ul>
-<li>Duplicated rows detected: 15 (0.34%) ❗</li>
-<li>5 columns have missing values.</li>
-<li>Worst column(highest missing %) is: Category with 63.00% ❗</li>
-<li>No constant columns detected.</li>
-
-</ul>
-
-<h2>Missing Values</h2>
-<p>Total missing cells: 6716</p>
-<p>Overall missing %: 30.79%</p>
-
-<table border="1" class="dataframe">
+    <div class="section">
+      <h2>Missing Values</h2>
+      <p class="small">Total missing cells: <strong>6716</strong></p>
+      <p class="small">Overall missing %: <strong>30.79%</strong></p>
+      <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th>column</th>
@@ -104,5 +278,7 @@
     </tr>
   </tbody>
 </table>
-
-</body></html>
+    </div>
+  </div>
+</body>
+</html>
