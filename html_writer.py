@@ -1,6 +1,15 @@
 # html_writer.py
 import os
 
+from html import escape
+
+def load_css(path="assets/style.css") -> str:
+    try:
+        with open(path, 'r', encoding="utf-8") as f:
+            return f"<style>\n{f.read()}\n</style>"
+    except FileNotFoundError:
+        return ""
+
 def write_html(
     filepath: str,
     rows: int,
@@ -12,8 +21,13 @@ def write_html(
     warnings: list[str],
     output_file="output/report.html",
 ):
-    os.makedirs(os.path.dirname(output_file), exist_ok=True)
-
+    
+    css_block = load_css()
+    
+    dirpath = os.path.dirname(output_file)
+    if dirpath:
+        os.makedirs(dirpath, exist_ok=True)
+    
     # Decide what to show in the Missing Values section
     if total_missing_cells == 0:
         missing_section_html = """
@@ -27,32 +41,58 @@ def write_html(
         )
     
     # Warnings section
-    warnings_section_html = ""
-    for warning in warnings:
-         warnings_section_html += "<li>" + warning + '</li>\n'
+    warnings_items = [f"<li>{escape(str(w))}</li>" for w in warnings]
+    warnings_section_html = "\n".join(warnings_items)
     
 
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(f"""
-<html><body>
-<h1>EDA Report | {os.path.basename(filepath)}</h1>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+{css_block}
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>EDA Report | {os.path.basename(filepath)}</h1>
+      <p class="subtitle">Generated from <code>{os.path.basename(filepath)}</code></p>
+    </header>
 
-<p>Rows: {rows}</p>
-<p>Columns: {cols}</p>
+    <div class="grid">
+      <div class="card">
+        <div class="label">Rows</div>
+        <div class="value">{rows}</div>
+      </div>
+      <div class="card">
+        <div class="label">Columns</div>
+        <div class="value">{cols}</div>
+      </div>
+    </div>
 
-<h2>Preview</h2>
-{preview_df.to_html(index=False)}
+    <div class="section">
+      <h2>Warnings</h2>
+      <div class="warnings">
+        <ul>
+          {warnings_section_html}
+        </ul>
+      </div>
+    </div>
 
-<h2>Warnings</h2>
-<ul>
-{warnings_section_html}
-</ul>
+    <div class="section">
+      <h2>Preview</h2>
+      <p class="note">First rows of the dataset</p>
+      {preview_df.to_html(index=False)}
+    </div>
 
-<h2>Missing Values</h2>
-<p>Total missing cells: {total_missing_cells}</p>
-<p>Overall missing %: {overall_missing_pct:.2f}%</p>
-
-{missing_section_html}
-
-</body></html>
+    <div class="section">
+      <h2>Missing Values</h2>
+      <p class="small">Total missing cells: <strong>{total_missing_cells}</strong></p>
+      <p class="small">Overall missing %: <strong>{overall_missing_pct:.2f}%</strong></p>
+      {missing_section_html}
+    </div>
+  </div>
+</body>
+</html>
 """)

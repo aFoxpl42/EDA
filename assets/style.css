@@ -1,0 +1,148 @@
+  :root {
+    --bg: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --card: #f9fafb;
+    --accent: #2563eb;
+    --warn: #b45309;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 18px 48px;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    margin: 0 0 6px 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 14px 0 18px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .card .label {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .card .value {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  h2 {
+    margin-top: 26px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .note {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: -4px;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+  }
+
+  li {
+    margin: 6px 0;
+  }
+
+  .warnings {
+    border-left: 4px solid var(--warn);
+    padding-left: 12px;
+    background: #fffbeb;
+    border-radius: 10px;
+    border: 1px solid #f3e8c8;
+    padding: 12px 14px;
+  }
+
+  table.dataframe {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 13px;
+  }
+
+  table.dataframe thead th {
+    background: #f3f4f6;
+    text-align: left;
+    font-weight: 700;
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table.dataframe tbody td, table.dataframe tbody th {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  table.dataframe tbody tr:nth-child(even) {
+    background: #fcfcfd;
+  }
+
+  code {
+    background: #f3f4f6;
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+
+  .section {
+    margin-top: 18px;
+  }
+
+  .small {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+  }
