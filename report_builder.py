@@ -34,26 +34,26 @@ def analyze_csv(filepath: str, delimiter: str):
     duplicated_rows_pct = (duplicated_rows / rows) * 100 if rows > 0 else 0.0
 
     if duplicated_rows > 0:
-        warnings.append(f"Duplicated rows detected: {duplicated_rows} ({duplicated_rows_pct:.2f}%) ❗")
+        warnings.append(f"Duplicated rows detected: {duplicated_rows} ({duplicated_rows_pct:.2f}%) ")
     else:
-        warnings.append("No duplicate rows detected ✅")
+        warnings.append("No duplicate rows detected ")
     
     if columns_with_missing > 0:
         warnings.append(f"{columns_with_missing} columns have missing values.")
         sorted_by_missing_pct = missing_df.sort_values("missing_pct", ascending=False)
         worst_column = sorted_by_missing_pct.index[0]
-        warnings.append(f"Worst column(highest missing %) is: {worst_column} with {sorted_by_missing_pct['missing_pct'].iloc[0]:.2f}% ❗")
+        warnings.append(f"Worst column(highest missing %) is: {worst_column} with {sorted_by_missing_pct['missing_pct'].iloc[0]:.2f}% ")
     else: 
-        warnings.append("No missing values detected in any columns ✅")
+        warnings.append("No missing values detected in any columns ")
 
     const_columns = list(df.columns[df.nunique() <=1].values)
     
     if len(const_columns) > 0 and len(const_columns) < 10:
-        warnings.append(f"Constant columns: {const_columns} ❗")
+        warnings.append(f"Constant columns: {const_columns} ")
     elif len(const_columns) >= 10:
         const_columns_first_10 = const_columns[:10]
         const_columns_first_10.append("and more....")
-        warnings.append(f"Constant columns: {const_columns_first_10} ❗")
+        warnings.append(f"Constant columns: {const_columns_first_10} ")
     else:
         warnings.append(f"No constant columns detected.")
     
@@ -61,7 +61,7 @@ def analyze_csv(filepath: str, delimiter: str):
     df_obj = df.select_dtypes(include=object)
     # per column metrics
     non_null_count_per_col = df_obj.count()
-    unique_count_per_col = df_obj.nunique(0, dropna=True)
+    unique_count_per_col = df_obj.nunique(axis=0, dropna=True)
     # uniqueness ration per column
     unique_ratio = unique_count_per_col / non_null_count_per_col
     
