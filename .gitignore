@@ -1,4 +1,4 @@
-__pycache__
-env
-example
-output
+__pycache__/
+env/
+example/
+output/
