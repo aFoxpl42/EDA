@@ -10,8 +10,8 @@ def main() -> int:
         return 1
 
     filepath = sys.argv[1]
-    output_path = sys.argv[2] if sys.argv[2] else "output/report.html"
-    delimiter = sys.argv[3] if sys.argv[3] else ','
+    output_path = sys.argv[2] if len(sys.argv)>2 else "output/report.html"
+    delimiter = sys.argv[3] if len(sys.argv)>3 else ','
 
     if not os.path.exists(filepath):
         print(f"File '{filepath}' does not exist.")
