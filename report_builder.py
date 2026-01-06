@@ -1,9 +1,8 @@
 import validators
 
-# TODO Fix rounding of missing_pct in Missing Values table
-
 
 def analyze_csv(df):
+    
     rows, cols = df.shape
 
     # Per-column missing summary
