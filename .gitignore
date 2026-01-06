@@ -2,6 +2,7 @@ __pycache__/
 env/
 example/
 output/
-.mypy/cache
-.ruff/cache
-.pytest/cache
+.mypy/cache/
+.ruff/cache/
+.pytest/cache/
+docs/
