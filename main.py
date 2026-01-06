@@ -39,7 +39,9 @@ def main() -> int:
         print(e)
         return 1
 
-    missingness_plot_path = miss_bar_chart(missing_df, "output/assets")  # str ("" if none)
+    missingness_plot_path = miss_bar_chart(
+        missing_df, "output/assets"
+    )  # str ("" if none)
     histogram_plot_paths = hist_plots(df, "output/assets")  # list[str]
 
     write_html(

@@ -14,9 +14,17 @@ def test_full_report_generation_pipeline(tmp_path):
             "bmi": [18.1, 22.5, 27.0, 30.2, None, 25.5, 26.1, 28.0, 29.3, 31.0, 33.2],
             "class": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
             "email": [
-                "a@example.com", "b@example.com", None, "d@example.com", "e@example.com",
-                "f@example.com", "g@example.com", "h@example.com", "i@example.com",
-                "j@example.com", "k@example.com",
+                "a@example.com",
+                "b@example.com",
+                None,
+                "d@example.com",
+                "e@example.com",
+                "f@example.com",
+                "g@example.com",
+                "h@example.com",
+                "i@example.com",
+                "j@example.com",
+                "k@example.com",
             ],
         }
     )
@@ -31,7 +39,9 @@ def test_full_report_generation_pipeline(tmp_path):
     report_path = out_dir / "report.html"
 
     # Act: run pipeline
-    rows, cols, preview_df, missing_df, total_missing, overall_pct, warnings = analyze_csv(df)
+    rows, cols, preview_df, missing_df, total_missing, overall_pct, warnings = (
+        analyze_csv(df)
+    )
 
     missing_plot = miss_bar_chart(missing_df, out_dir=assets_dir)
     hist_paths = hist_plots(df, out_dir=assets_dir)
