@@ -3,8 +3,8 @@ import re
 import matplotlib.pyplot as plt
 
 
-def miss_bar_chart(missing_df) -> str:
-    output_directory = "output/assets/missingness.png"
+def miss_bar_chart(missing_df, out_dir) -> str:
+    output_directory = f"{out_dir}/missingness.png"
     if len(missing_df) == 0:
         return ""
     df_filtered = missing_df[missing_df["missing_pct"] > 0]
@@ -29,7 +29,7 @@ def miss_bar_chart(missing_df) -> str:
 # Function that plots 3 numeric columns, chosen automatically based of standard deviation of them.
 
 
-def hist_plots(df) -> list[str]:
+def hist_plots(df, out_dir) -> list[str]:
     df_numeric = df.select_dtypes(include="number")
     if len(df_numeric) == 0:
         return []
@@ -50,7 +50,7 @@ def hist_plots(df) -> list[str]:
     else:
         top_std = df_numeric_filtered.std().sort_values(ascending=False).dropna()
 
-    os.makedirs("output/assets", exist_ok=True)
+    os.makedirs(out_dir, exist_ok=True)
     paths = []
     for i in range(len(top_std)):
         col = top_std.index[i]
@@ -67,7 +67,7 @@ def hist_plots(df) -> list[str]:
         )
         fig.tight_layout()
         filename_safe_col = re.sub(r"\W+ ", "", col).replace(" ", "_")
-        out_path = f"output/assets/hist_{filename_safe_col}.png"
+        out_path = f"{out_dir}/hist_{filename_safe_col}.png"
         fig.savefig(out_path)
         plt.close(fig)
         paths.append(out_path)
