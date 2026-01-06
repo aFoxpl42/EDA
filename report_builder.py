@@ -4,49 +4,53 @@ import validators
 
 # TODO Fix rounding of missing_pct in Missing Values table
 
+
 def analyze_csv(df):
 
     rows, cols = df.shape
 
     # Per-column missing summary
-    missing_df = (
-        df.isna()
-          .sum()
-          .rename("missing_count")
-          .to_frame()
+    missing_df = df.isna().sum().rename("missing_count").to_frame()
+    missing_df["missing_pct"] = (
+        (missing_df["missing_count"] / rows) * 100 if rows > 0 else 0
     )
-    missing_df["missing_pct"] = (missing_df["missing_count"] / rows) * 100 if rows > 0 else 0
-    missing_df['missing_pct'] = missing_df['missing_pct'].round(2)
+    missing_df["missing_pct"] = missing_df["missing_pct"].round(2)
 
     # Overall missing stats
     total_missing_cells = int(missing_df["missing_count"].sum())
     total_cells = rows * cols
-    overall_missing_pct = (total_missing_cells / total_cells) * 100 if total_cells else 0.0
+    overall_missing_pct = (
+        (total_missing_cells / total_cells) * 100 if total_cells else 0.0
+    )
 
-    columns_with_missing = (missing_df["missing_count"] > 0).sum()  
+    columns_with_missing = (missing_df["missing_count"] > 0).sum()
 
     # Initializaion of warning list
-    # It'll potentially contain bullet-points warnings about data 
+    # It'll potentially contain bullet-points warnings about data
     warnings = []
 
-    duplicated_rows = df.duplicated(keep='first').sum() 
+    duplicated_rows = df.duplicated(keep="first").sum()
     duplicated_rows_pct = (duplicated_rows / rows) * 100 if rows > 0 else 0.0
 
     if duplicated_rows > 0:
-        warnings.append(f"Duplicated rows detected: {duplicated_rows} ({duplicated_rows_pct:.2f}%) ")
+        warnings.append(
+            f"Duplicated rows detected: {duplicated_rows} ({duplicated_rows_pct:.2f}%) "
+        )
     else:
         warnings.append("No duplicate rows detected ")
-    
+
     if columns_with_missing > 0:
         warnings.append(f"{columns_with_missing} columns have missing values.")
         sorted_by_missing_pct = missing_df.sort_values("missing_pct", ascending=False)
         worst_column = sorted_by_missing_pct.index[0]
-        warnings.append(f"Worst column (highest missing %) is: {worst_column} with {sorted_by_missing_pct['missing_pct'].iloc[0]:.2f}% ")
-    else: 
+        warnings.append(
+            f"Worst column (highest missing %) is: {worst_column} with {sorted_by_missing_pct['missing_pct'].iloc[0]:.2f}% "
+        )
+    else:
         warnings.append("No missing values detected in any columns ")
 
-    const_columns = list(df.columns[df.nunique() <=1].values)
-    
+    const_columns = list(df.columns[df.nunique() <= 1].values)
+
     if len(const_columns) > 0 and len(const_columns) < 10:
         warnings.append(f"Constant columns: {", ".join(const_columns)} ")
     elif len(const_columns) >= 10:
@@ -55,7 +59,7 @@ def analyze_csv(df):
         warnings.append(f"Constant columns: {", ".join(const_columns_first_10)} ")
     else:
         warnings.append(f"No constant columns detected.")
-    
+
     likely_id = []
     df_obj = df.select_dtypes(include=object)
     # per column metrics
@@ -63,21 +67,16 @@ def analyze_csv(df):
     unique_count_per_col = df_obj.nunique(axis=0, dropna=True)
     # uniqueness ration per column
     unique_ratio = unique_count_per_col / non_null_count_per_col
-    
 
-    likely_id = (
-        unique_ratio[
-            (unique_ratio >= 0.8) & # high uniquenesss
-            (unique_count_per_col >= 20) & # enough data
-            (non_null_count_per_col >= 20) # avoid tiny columns
-        ]
-        .index
-        .to_list()
-    )        
-    
+    likely_id = unique_ratio[
+        (unique_ratio >= 0.8)  # high uniquenesss
+        & (unique_count_per_col >= 20)  # enough data
+        & (non_null_count_per_col >= 20)  # avoid tiny columns
+    ].index.to_list()
+
     email_like_columns = []
     id_like_columns = []
-    
+
     for i in likely_id:
         email_like = 0
         sample = df_obj[i].dropna().astype(str).head(200)
@@ -85,26 +84,42 @@ def analyze_csv(df):
             if validators.email(j.lower().strip()):
                 email_like += 1
         if len(sample) > 0:
-            email_like_score = email_like/len(sample)
+            email_like_score = email_like / len(sample)
             if email_like_score >= 0.6:
                 email_like_columns.append(i)
             else:
                 id_like_columns.append(i)
-    
+
     if len(email_like_columns) >= 10:
         email_like_columns_first_10 = email_like_columns[:10]
         email_like_columns_first_10.append("and more...")
-        warnings.append("High-cardinality email-like columns: " + ", ".join(email_like_columns_first_10) + f" (total: {len(email_like_columns)})")
+        warnings.append(
+            "High-cardinality email-like columns: "
+            + ", ".join(email_like_columns_first_10)
+            + f" (total: {len(email_like_columns)})"
+        )
     elif len(email_like_columns) > 0 and len(email_like_columns) < 10:
-        warnings.append("High-cardinality email-like columns: " + ", ".join(email_like_columns) + f" (total: {len(email_like_columns)})")
-    
+        warnings.append(
+            "High-cardinality email-like columns: "
+            + ", ".join(email_like_columns)
+            + f" (total: {len(email_like_columns)})"
+        )
+
     if len(id_like_columns) >= 10:
         id_like_columns_first_10 = id_like_columns[:10]
         id_like_columns_first_10.append("and more...")
-        warnings.append("High-cardinality ID-like columns: " + ", ".join(id_like_columns_first_10) + f" (total: {len(id_like_columns)})")
+        warnings.append(
+            "High-cardinality ID-like columns: "
+            + ", ".join(id_like_columns_first_10)
+            + f" (total: {len(id_like_columns)})"
+        )
     elif len(id_like_columns) > 0 and len(id_like_columns) < 10:
-        warnings.append("High-cardinality ID-like columns: " + ", ".join(id_like_columns) + f" (total: {len(id_like_columns)})")
-    
+        warnings.append(
+            "High-cardinality ID-like columns: "
+            + ", ".join(id_like_columns)
+            + f" (total: {len(id_like_columns)})"
+        )
+
     return (
         rows,
         cols,
@@ -112,5 +127,5 @@ def analyze_csv(df):
         missing_df.reset_index().rename(columns={"index": "column"}),
         total_missing_cells,
         overall_missing_pct,
-        warnings
+        warnings,
     )

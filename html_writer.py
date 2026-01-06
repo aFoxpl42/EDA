@@ -2,6 +2,7 @@
 import os
 from html import escape
 
+
 def load_css(path="assets/style.css") -> str:
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -9,12 +10,14 @@ def load_css(path="assets/style.css") -> str:
     except FileNotFoundError:
         return ""
 
+
 def _relpath_for_html(img_path: str, html_output_path: str) -> str:
     if not img_path:
         return ""
     html_dir = os.path.dirname(os.path.abspath(html_output_path)) or os.getcwd()
     img_abs = os.path.abspath(img_path)
     return os.path.relpath(img_abs, start=html_dir)
+
 
 def write_html(
     filepath: str,
@@ -42,9 +45,9 @@ def write_html(
     if total_missing_cells == 0:
         missing_section_html = "<p><strong>No missing values detected.</strong></p>"
     else:
-        missing_section_html = (
-            missing_df.sort_values("missing_count", ascending=False).to_html(index=False)
-        )
+        missing_section_html = missing_df.sort_values(
+            "missing_count", ascending=False
+        ).to_html(index=False)
 
     # Warnings section
     warnings_items = [f"<li>{escape(str(w))}</li>" for w in warnings]
@@ -58,7 +61,9 @@ def write_html(
              style="max-width:100%; height:auto; border:1px solid #e5e7eb; border-radius:10px; padding:8px; background:#fff;" />
         """
     else:
-        missing_img_html = "<p class='note'>No missingness plot generated (no missing values).</p>"
+        missing_img_html = (
+            "<p class='note'>No missingness plot generated (no missing values).</p>"
+        )
 
     # Visual Overview: Histogram images
     if histogram_plot_paths:
@@ -74,7 +79,8 @@ def write_html(
         hist_imgs_html = "<p class='note'>No numeric histograms generated (no suitable numeric columns).</p>"
 
     with open(output_file, "w", encoding="utf-8") as f:
-        f.write(f"""
+        f.write(
+            f"""
 <html>
 <head>
 <meta charset="utf-8" />
@@ -135,4 +141,5 @@ def write_html(
   </div>
 </body>
 </html>
-""")
+"""
+        )
