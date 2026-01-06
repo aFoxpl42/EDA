@@ -1,12 +1,9 @@
-import os
-import pandas as pd
 import validators
 
 # TODO Fix rounding of missing_pct in Missing Values table
 
 
 def analyze_csv(df):
-
     rows, cols = df.shape
 
     # Per-column missing summary
@@ -52,13 +49,13 @@ def analyze_csv(df):
     const_columns = list(df.columns[df.nunique() <= 1].values)
 
     if len(const_columns) > 0 and len(const_columns) < 10:
-        warnings.append(f"Constant columns: {", ".join(const_columns)} ")
+        warnings.append(f"Constant columns: {', '.join(const_columns)} ")
     elif len(const_columns) >= 10:
         const_columns_first_10 = const_columns[:10]
         const_columns_first_10.append("and more....")
-        warnings.append(f"Constant columns: {", ".join(const_columns_first_10)} ")
+        warnings.append(f"Constant columns: {', '.join(const_columns_first_10)} ")
     else:
-        warnings.append(f"No constant columns detected.")
+        warnings.append("No constant columns detected.")
 
     likely_id = []
     df_obj = df.select_dtypes(include=object)
