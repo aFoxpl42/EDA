@@ -4,3 +4,4 @@ example/
 output/
 .mypy/cache
 .ruff/cache
+.pytest/cache
