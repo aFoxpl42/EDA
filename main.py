@@ -1,9 +1,11 @@
 import sys
 import os
+import pandas as pd
 
 from report_builder import analyze_csv
 from html_writer import write_html
 from plots import miss_bar_chart
+from plots import hist_plots
 
 def main() -> int:
     if len(sys.argv) < 2:
@@ -17,14 +19,17 @@ def main() -> int:
     if not os.path.exists(filepath):
         print(f"File '{filepath}' does not exist.")
         return 1
+    
+    df = pd.read_csv(filepath, delimiter=delimiter)
 
     try:
-        rows, cols, preview_df, missing_df, total_missing_cells, overall_missing_pct, warnings = analyze_csv(filepath, delimiter)
+        rows, cols, preview_df, missing_df, total_missing_cells, overall_missing_pct, warnings = analyze_csv(df)
     except FileNotFoundError as e:
         print(e)
         return 1
     
-    missingness_chart_file_location = miss_bar_chart(missing_df)
+    missingness_chart_file_location: str = miss_bar_chart(missing_df) # 
+    hist_plots_files_location: list[str] = hist_plots(df)
     
     write_html(
         filepath=filepath,

@@ -2,11 +2,9 @@ import os
 import pandas as pd
 import validators
 
-def analyze_csv(filepath: str, delimiter: str):
-    if not os.path.exists(filepath):
-        raise FileNotFoundError(f"File: '{filepath}' doesn't exist")
+# TODO Fix rounding of missing_pct in Missing Values table
 
-    df = pd.read_csv(filepath, delimiter=delimiter)
+def analyze_csv(df):
 
     rows, cols = df.shape
 
@@ -42,18 +40,18 @@ def analyze_csv(filepath: str, delimiter: str):
         warnings.append(f"{columns_with_missing} columns have missing values.")
         sorted_by_missing_pct = missing_df.sort_values("missing_pct", ascending=False)
         worst_column = sorted_by_missing_pct.index[0]
-        warnings.append(f"Worst column(highest missing %) is: {worst_column} with {sorted_by_missing_pct['missing_pct'].iloc[0]:.2f}% ")
+        warnings.append(f"Worst column (highest missing %) is: {worst_column} with {sorted_by_missing_pct['missing_pct'].iloc[0]:.2f}% ")
     else: 
         warnings.append("No missing values detected in any columns ")
 
     const_columns = list(df.columns[df.nunique() <=1].values)
     
     if len(const_columns) > 0 and len(const_columns) < 10:
-        warnings.append(f"Constant columns: {const_columns} ")
+        warnings.append(f"Constant columns: {", ".join(const_columns)} ")
     elif len(const_columns) >= 10:
         const_columns_first_10 = const_columns[:10]
         const_columns_first_10.append("and more....")
-        warnings.append(f"Constant columns: {const_columns_first_10} ")
+        warnings.append(f"Constant columns: {", ".join(const_columns_first_10)} ")
     else:
         warnings.append(f"No constant columns detected.")
     
