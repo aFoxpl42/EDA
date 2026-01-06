@@ -16,6 +16,7 @@ def analyze_csv(df):
           .to_frame()
     )
     missing_df["missing_pct"] = (missing_df["missing_count"] / rows) * 100 if rows > 0 else 0
+    missing_df['missing_pct'] = missing_df['missing_pct'].round(2)
 
     # Overall missing stats
     total_missing_cells = int(missing_df["missing_count"].sum())

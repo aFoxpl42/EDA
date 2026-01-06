@@ -28,8 +28,8 @@ def main() -> int:
         print(e)
         return 1
     
-    missingness_chart_file_location: str = miss_bar_chart(missing_df) # 
-    hist_plots_files_location: list[str] = hist_plots(df)
+    missingness_plot_path = miss_bar_chart(missing_df) # str ("" if none)
+    histogram_plot_paths = hist_plots(df) # list[str]
     
     write_html(
         filepath=filepath,
@@ -41,6 +41,8 @@ def main() -> int:
         overall_missing_pct=overall_missing_pct,
         warnings=warnings,
         output_file=output_path,
+        missingness_plot_path=missingness_plot_path,
+        histogram_plot_paths=histogram_plot_paths
     )
 
     print(f"Report generated: {output_path}")
