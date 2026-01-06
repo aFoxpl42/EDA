@@ -8,12 +8,12 @@ The goal of this project is to **save analyst time** by automating repetitive ED
 
 ## 🖼 Example Output
 
-> _Screenshot of a generated report_
+> _Screenshots of a generated report_
 
-![EDA Report Screenshot](docs/report_screenshot.png)
+![EDA Report Screenshot](docs/ss1.png)
+![EDA Report Screenshot](docs/ss2.png)
+![EDA Report Screenshot](docs/ss3.png)
 
-*(Replace the image above with a real screenshot of your HTML report.  
-Create a `docs/` folder and place the image there.)*
 
 ---
 
