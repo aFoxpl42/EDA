@@ -2,3 +2,5 @@ __pycache__/
 env/
 example/
 output/
+.mypy/cache
+.ruff/cache
