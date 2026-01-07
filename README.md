@@ -54,3 +54,52 @@ Automatically detects and reports:
 
 ```bash
 pip install -r requirements.txt
+```
+
+Generate a report from a CSV file:
+
+```bash
+python main.py path/to/data.csv
+```
+
+Optional arguments:
+
+```bash
+python main.py path/to/data.csv output/report.html ","
+```
+
+**Arguments**
+- `path/to/data.csv` – input dataset  
+- `output/report.html` – output HTML file (optional, default: `output/report.html`)  
+- `,` – CSV delimiter (optional, default: comma)
+
+Open the generated report in a browser:
+
+```bash
+open output/report.html
+# or
+xdg-open output/report.html
+```
+
+---
+
+## 🧠 Design decisions
+
+### Why HTML reports?
+HTML reports are portable, easy to share, and require no backend or additional tooling.  
+They can be opened in any modern browser and work well for both technical and non-technical stakeholders.
+
+### Why heuristic-based warnings?
+Instead of relying on column names, the tool analyzes data characteristics such as:
+- uniqueness ratio
+- number of non-null values
+- value patterns (for example, email validation)
+
+This makes the analysis robust across datasets with unknown or inconsistent schemas.
+
+### Why limit the number of plots?
+To keep reports readable and focused, only the most informative visualizations are shown:
+- a missingness bar chart for columns with missing data
+- up to **three numeric histograms** selected based on variance (standard deviation)
+
+This avoids overwhelming the reader while still highlighting important structure in the data.
